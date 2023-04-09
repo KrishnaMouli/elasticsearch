@@ -1,0 +1,37 @@
+---
+- name: install and configure ES Cluster
+  hosts: all
+  become: yes
+  tasks:
+  - name: Install Java
+    ansible.builtin.command: 
+      cmd: yum install java-1.8.0-openjdk.x86_64 -y 
+
+  - name: Download ES RPM file
+    ansible.builtin.command:
+      cmd: wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.16.rpm
+      chdir: /opt
+
+  - name: Install ElasticSearch
+    ansible.builtin.command:
+      cmd: rpm -ivh elasticsearch-5.6.16.rpm 
+      chdir: /opt
+
+  - name: Enable service at run level
+    ansible.builtin.command:
+      cmd: systemctl enable elasticsearch.service
+  
+  - name: Start service elasticsearch, if not started
+    ansible.builtin.service:
+      name: elasticsearch
+      state: started
+
+  - name: Copy config file
+    ansible.builtin.template:
+      src: elasticsearch.j2
+      dest: /etc/elasticsearch/elasticsearch.yml
+
+  - name: Start service elasticsearch, if not started
+    ansible.builtin.service:
+      name: elasticsearch
+      state: restarted
