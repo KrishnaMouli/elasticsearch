@@ -17,7 +17,7 @@ resource "null_resource" "example" {
   provisioner "local-exec" {
     command = <<EOT
       sleep 100
-      ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u centos -i public_ips.txt --private-key estest.pem playbook.yaml
+      ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u centos -i public_ips.txt --private-key Krishna.pem playbook.yaml
     EOT
   }
   depends_on = [resource.local_file.ip]
